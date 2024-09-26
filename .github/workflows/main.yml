@@ -30,11 +30,17 @@ jobs:
           echo "\$RUNNER_CONTEXT" && echo "$RUNNER_CONTEXT"
           echo "\$STRATEGY_CONTEXT" && echo "$STRATEGY_CONTEXT"
           echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
+      - name: Set Node.js 12
+        uses: actions/setup-node@v4
+        with:
+          node-version: 12
       - name: GitClone
         env:
           ACTIONS_RUNNER_DEBUG: true
           ACTIONS_STEP_DEBUG: true
         uses: actions/checkout@v4
         with:
-          repository: telegramdesktop/tdesktop
+          repository: lyswhut/lx-music-desktop
           submodules: recursive
+          ref: refs/tags/v0.1.0
+      - run: npm install && npm build && npm pub:gh
