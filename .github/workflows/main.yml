@@ -43,4 +43,4 @@ jobs:
           repository: lyswhut/lx-music-desktop
           submodules: recursive
           ref: refs/tags/v0.1.0
-      - run: npm install && npm build && npm pub:gh
+      - run: npm install && npm run build && npm run pub:gh
