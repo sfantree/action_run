@@ -31,10 +31,10 @@ jobs:
           echo "\$STRATEGY_CONTEXT" && echo "$STRATEGY_CONTEXT"
           echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
       - name: GitClone
-          env:
-            ACTIONS_RUNNER_DEBUG true
-            ACTIONS_STEP_DEBUG: true
-          uses: actions/checkout@v4
-          with:
-            repository: telegramdesktop/tdesktop
-            submodules: recursive
+        env:
+          ACTIONS_RUNNER_DEBUG: true
+          ACTIONS_STEP_DEBUG: true
+        uses: actions/checkout@v4
+        with:
+          repository: telegramdesktop/tdesktop
+          submodules: recursive
