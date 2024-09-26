@@ -1,0 +1,27 @@
+name: lx_action_run
+on: workflow_dispatch
+jobs:
+  ubuntu:
+    name: Ubuntu Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Information
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          JOB_CONTEXT: ${{ toJson(job) }}
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: |
+          env
+          echo $GITHUB_PATH
+          echo $GITHUB_ENV
+          echo $GITHUB_SHA 
+          echo $GITHUB_REPOSITORY
+          echo $GITHUB_WORKSPACE
+          echo "$GITHUB_CONTEXT"
+          echo "$JOB_CONTEXT"
+          echo "$STEPS_CONTEXT"
+          echo "$RUNNER_CONTEXT"
+          echo "$STRATEGY_CONTEXT"
+          echo "$MATRIX_CONTEXT"
