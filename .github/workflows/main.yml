@@ -5,7 +5,7 @@ jobs:
     name: Ubuntu Build
     runs-on: ubuntu-latest
     steps:
-      - name: Echo Information
+      - name: DumInfo
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
           JOB_CONTEXT: ${{ toJson(job) }}
@@ -13,15 +13,28 @@ jobs:
           STRATEGY_CONTEXT: ${{ toJson(strategy) }}
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: |
-          env
-          echo $GITHUB_PATH
-          echo $GITHUB_ENV
-          echo $GITHUB_SHA 
-          echo $GITHUB_REPOSITORY
-          echo $GITHUB_WORKSPACE
-          echo "$GITHUB_CONTEXT"
-          echo "$JOB_CONTEXT"
-          echo "$STEPS_CONTEXT"
-          echo "$RUNNER_CONTEXT"
-          echo "$STRATEGY_CONTEXT"
-          echo "$MATRIX_CONTEXT"
+          echo "curl cip.cc" && curl cip.cc
+          echo "env" && env
+          echo "pwd" && pwd
+          echo "cat /proc/cpuinfo" && cat /proc/cpuinfo
+          echo "df -h" && df -h
+          echo "fdisk -l" && fdisk -l
+          echo "\$GITHUB_PATH" && echo $GITHUB_PATH
+          echo "\$GITHUB_ENV" && echo $GITHUB_ENV
+          echo "\$GITHUB_SHA" && echo $GITHUB_SHA 
+          echo "\$GITHUB_REPOSITORY" && echo $GITHUB_REPOSITORY
+          echo "\$GITHUB_WORKSPACE" && echo $GITHUB_WORKSPACE
+          echo "\$GITHUB_CONTEXT" && echo "$GITHUB_CONTEXT"
+          echo "\$JOB_CONTEXT" && echo "$JOB_CONTEXT"
+          echo "\$STEPS_CONTEXT" && echo "$STEPS_CONTEXT"
+          echo "\$RUNNER_CONTEXT" && echo "$RUNNER_CONTEXT"
+          echo "\$STRATEGY_CONTEXT" && echo "$STRATEGY_CONTEXT"
+          echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
+      - name: GitClone
+          env:
+            ACTIONS_RUNNER_DEBUG true
+            ACTIONS_STEP_DEBUG: true
+          uses: actions/checkout@v4
+          with:
+            repository: telegramdesktop/tdesktop
+            submodules: recursive
