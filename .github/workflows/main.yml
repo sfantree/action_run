@@ -30,10 +30,10 @@ jobs:
           echo "\$RUNNER_CONTEXT" && echo "$RUNNER_CONTEXT"
           echo "\$STRATEGY_CONTEXT" && echo "$STRATEGY_CONTEXT"
           echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
-      - name: Set Node.js 8
+      - name: Set Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 8
+          node-version: 20
       - name: GitClone
         env:
           ACTIONS_RUNNER_DEBUG: true
@@ -43,4 +43,10 @@ jobs:
           repository: Akkariiin/electron-ssr
           submodules: recursive
           ref: refs/tags/v0.2.6
-      - run: npm install && npm run build && npm run pack
+      - run: |
+          npm config set electron_mirror https://mirrors.huaweicloud.com/electron/
+          npm config set registry https://mirrors.huaweicloud.com/repository/npm/
+          npm i yarn@1.19.1
+          yarn
+          export NODE_OPTIONS=--openssl-legacy-provider
+          npm run build
