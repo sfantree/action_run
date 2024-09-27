@@ -30,10 +30,10 @@ jobs:
           echo "\$RUNNER_CONTEXT" && echo "$RUNNER_CONTEXT"
           echo "\$STRATEGY_CONTEXT" && echo "$STRATEGY_CONTEXT"
           echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
-      - name: Set Node.js 12
+      - name: Set Node.js 8
         uses: actions/setup-node@v4
         with:
-          node-version: 12
+          node-version: 8
       - name: GitClone
         env:
           ACTIONS_RUNNER_DEBUG: true
