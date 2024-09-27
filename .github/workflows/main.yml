@@ -40,7 +40,7 @@ jobs:
           ACTIONS_STEP_DEBUG: true
         uses: actions/checkout@v4
         with:
-          repository: lyswhut/lx-music-desktop
+          repository: Akkariiin/electron-ssr
           submodules: recursive
-          ref: refs/tags/v0.1.0
-      - run: npm install && npm run build && npm run pack:dir
+          ref: refs/tags/v0.2.6
+      - run: npm install && npm run build && npm run pack
