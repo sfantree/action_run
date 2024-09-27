@@ -45,9 +45,7 @@ jobs:
           ref: refs/tags/v0.2.6
       - run: |
           npm config ls -l
-          npm config set registry https://mirrors.huaweicloud.com/repository/npm/
           npm i yarn@1.19.1
-          npx yarn config set electron_mirror https://mirrors.huaweicloud.com/electron/
           yarn
           export NODE_OPTIONS=--openssl-legacy-provider
           npm run build
