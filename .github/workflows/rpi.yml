@@ -32,11 +32,11 @@ jobs:
           echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
       - name: GitClone
         run: |
-          DEBIAN_FRONTEND=noninteractive apt-get -y update
-          DEBIAN_FRONTEND=noninteractive apt-get -y build-essential
-          DEBIAN_FRONTEND=noninteractive apt-get -y install wget unzip xz-utils git bc bison flex libssl-dev make libc6-dev libncurses5-dev
-          DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential bc kmod cpio flex libncurses5-dev libelf-dev libssl-dev dwarves bison
-          DEBIAN_FRONTEND=noninteractive apt-get -y install crossbuild-essential-armhf
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y build-essential
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install wget unzip xz-utils git bc bison flex libssl-dev make libc6-dev libncurses5-dev
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential bc kmod cpio flex libncurses5-dev libelf-dev libssl-dev dwarves bison
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install crossbuild-essential-armhf
           git clone --depth=1 -b '1.20220830' https://github.com/raspberrypi/linux.git linux
           export KERNELPATH="$(pwd)/linux"
           wget "https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar.xz"
