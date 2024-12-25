@@ -42,8 +42,14 @@ jobs:
           xz -d gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar.xz
           tar xvf gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar
           export CROSSPATH="$(pwd)/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-"
-          pushed $KERNELPATH
+          pushd $KERNELPATH
           make KERNEL=kernel ARCH=arm CROSS_COMPILE=$CROSSPATH bcmrpi_defconfig
           make KERNEL=kernel ARCH=arm CROSS_COMPILE=$CROSSPATH -j`nproc` zImage modules dtbs
-          poped
+          ls -lh
+          popd
+          git clone --depth=1 https://github.com/morrownr/8821cu-20210916.git 8821cu-20210916
+          pushd 8821cu-20210916
+          make ARCH=arm CROSS_COMPILE=$CROSSPATH -C $KERNELPATH M=$(pwd) modules
+          ls -lh
+          popd
           
