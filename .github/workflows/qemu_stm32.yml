@@ -1,0 +1,65 @@
+name: qemu_stm32
+on: workflow_dispatch
+jobs:
+  ubuntu:
+    name: Ubuntu Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: DumpInfo
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          JOB_CONTEXT: ${{ toJson(job) }}
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: |
+          echo "curl cip.cc" && curl cip.cc
+          echo "env" && env
+          echo "pwd" && pwd
+          echo "cat /proc/cpuinfo" && cat /proc/cpuinfo
+          echo "df -h" && df -h
+          echo "fdisk -l" && fdisk -l
+          echo "\$GITHUB_PATH" && echo $GITHUB_PATH
+          echo "\$GITHUB_ENV" && echo $GITHUB_ENV
+          echo "\$GITHUB_SHA" && echo $GITHUB_SHA 
+          echo "\$GITHUB_REPOSITORY" && echo $GITHUB_REPOSITORY
+          echo "\$GITHUB_WORKSPACE" && echo $GITHUB_WORKSPACE
+          echo "\$GITHUB_CONTEXT" && echo "$GITHUB_CONTEXT"
+          echo "\$JOB_CONTEXT" && echo "$JOB_CONTEXT"
+          echo "\$STEPS_CONTEXT" && echo "$STEPS_CONTEXT"
+          echo "\$RUNNER_CONTEXT" && echo "$RUNNER_CONTEXT"
+          echo "\$STRATEGY_CONTEXT" && echo "$STRATEGY_CONTEXT"
+          echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
+      - name: GitClone
+        run: |
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install wget unzip xz-utils git bc bison flex libssl-dev make libc6-dev libncurses5-dev
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential bc kmod cpio flex libncurses5-dev libelf-dev libssl-dev dwarves bison
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential python3-dev zlib1g-dev libglib2.0-dev libpixman-1-dev libtool libfdt-dev
+          echo "安装Python2.7"
+          wget "https://mirrors.huaweicloud.com/python/2.7.18/Python-2.7.18.tar.xz"
+          xz -d Python-2.7.18.tar.xz
+          tar xf Python-2.7.18.tar
+          pushd Python-2.7.18
+          ./configure --prefix=/opt/python27
+          make -j`nproc`
+          make install
+          popd
+          echo "编译qemu_stm32"
+          git clone --depth 1 -b "stm32" https://github.com/beckus/qemu_stm32.git qemu_stm32
+          pushd qemu_stm32
+          ./configure --python=/opt/python27/bin/python --enable-debug --disable-xen --disable-werror --target-list="arm-softmmu" --static
+          make -j`nproc`
+          file "$(pwd)/arm-softmmu/qemu-system-arm"
+          popd
+          echo "安装gcc-arm-none-eabi交叉编译链"
+          wget "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz"
+          tar xjf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz
+          ls -lh "$(pwd)/gcc-arm-none-eabi-10.3-2021.10/bin"
+          export CROSSPATH="$(pwd)/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-"
+          export PATH="$(pwd)/gcc-arm-none-eabi-10.3-2021.10/bin:$PATH"
+          echo "安装gcc-arm-none-eabi交叉编译链"
+          git clone --depth 1 https://github.com/beckus/stm32_p103_demos.git stm32_p103_demos
+          pushd stm32_p103_demos
+          make
+          popd
