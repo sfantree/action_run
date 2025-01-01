@@ -37,6 +37,7 @@ jobs:
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install procps inetutils-ping 
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install x11vnc xvfb x11-apps
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install imagemagick
+          sudo su -
           echo "编译安装daemonize"
           git clone --depth 1  https://salsa.debian.org/debian/daemonize.git daemonize
           pushd daemonize
