@@ -48,18 +48,19 @@ jobs:
           popd
           echo "启动图形化组件"
           sudo /usr/bin/daemonize /usr/bin/ping -c www.google.com
-          sudo ps -ef
+          #sudo ps -ef
           sudo /usr/bin/daemonize /usr/bin/Xvfb :99 -screen 0 1280x1024x24
           sleep 2
-          sudo ps -ef
+          #sudo ps -ef
           sudo /usr/bin/daemonize /usr/bin/x11vnc -localhost -display :99
           sleep 2
-          sudo /usr/bin/daemonize daemonize -E DISPLAY=":99" /usr/bin/openbox
+          sudo /usr/bin/daemonize -E DISPLAY=":99" /usr/bin/openbox
           sleep 2
-          sudo /usr/bin/daemonize daemonize -E DISPLAY=":99" /usr/bin/xclock
+          sudo /usr/bin/daemonize -E DISPLAY=":99" /usr/bin/xclock
           sleep 2
           sudo /usr/bin/xwd -display :99 -root -silent | convert xwd:- png:/tmp/screenshot.png
           sleep 2
+          sudo ps -ef
           sudo netstat -ntlp
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
