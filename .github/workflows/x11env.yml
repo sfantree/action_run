@@ -35,7 +35,7 @@ jobs:
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y update
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential vim wget curl git make gcc
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install procps inetutils-ping 
-          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install x11vnc xvfb x11-apps
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install x11vnc xvfb x11-apps openbox
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install imagemagick
           echo "编译安装daemonize"
           git clone --depth 1  https://salsa.debian.org/debian/daemonize.git daemonize
