@@ -37,28 +37,27 @@ jobs:
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install procps inetutils-ping 
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install x11vnc xvfb x11-apps
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install imagemagick
-          sudo su -
           echo "编译安装daemonize"
           git clone --depth 1  https://salsa.debian.org/debian/daemonize.git daemonize
           pushd daemonize
           ./configure
           make -j`nproc`
           chmod +x ./daemonize
-          cp ./daemonize /usr/bin/daemonize
+          sudo cp ./daemonize /usr/bin/daemonize
           ldd /usr/bin/daemonize
           popd
           echo "启动图形化组件"
-          /usr/bin/daemonize /usr/bin/Xvfb :99 -screen 0 1280x1024x24
+          sudo /usr/bin/daemonize /usr/bin/Xvfb :99 -screen 0 1280x1024x24
           sleep 2
-          /usr/bin/daemonize /usr/bin/x11vnc -localhost -display :99
+          sudo /usr/bin/daemonize /usr/bin/x11vnc -localhost -display :99
           sleep 2
-          /usr/bin/daemonize daemonize -E DISPLAY=":99" /usr/bin/openbox
+          sudo /usr/bin/daemonize daemonize -E DISPLAY=":99" /usr/bin/openbox
           sleep 2
-          /usr/bin/daemonize daemonize -E DISPLAY=":99" /usr/bin/xclock
+          sudo /usr/bin/daemonize daemonize -E DISPLAY=":99" /usr/bin/xclock
           sleep 2
-          /usr/bin/xwd -display :99 -root -silent | convert xwd:- png:/tmp/screenshot.png
+          sudo /usr/bin/xwd -display :99 -root -silent | convert xwd:- png:/tmp/screenshot.png
           sleep 2
-          netstat -ntlp
+          sudo netstat -ntlp
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
