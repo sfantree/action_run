@@ -1,0 +1,65 @@
+name: x11env
+on: workflow_dispatch
+jobs:
+  ubuntu:
+    name: Ubuntu Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: DumpInfo
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          JOB_CONTEXT: ${{ toJson(job) }}
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: |
+          echo "curl cip.cc" && curl cip.cc
+          echo "env" && env
+          echo "pwd" && pwd
+          echo "cat /proc/cpuinfo" && cat /proc/cpuinfo
+          echo "df -h" && df -h
+          echo "fdisk -l" && fdisk -l
+          echo "\$GITHUB_PATH" && echo $GITHUB_PATH
+          echo "\$GITHUB_ENV" && echo $GITHUB_ENV
+          echo "\$GITHUB_SHA" && echo $GITHUB_SHA 
+          echo "\$GITHUB_REPOSITORY" && echo $GITHUB_REPOSITORY
+          echo "\$GITHUB_WORKSPACE" && echo $GITHUB_WORKSPACE
+          echo "\$GITHUB_CONTEXT" && echo "$GITHUB_CONTEXT"
+          echo "\$JOB_CONTEXT" && echo "$JOB_CONTEXT"
+          echo "\$STEPS_CONTEXT" && echo "$STEPS_CONTEXT"
+          echo "\$RUNNER_CONTEXT" && echo "$RUNNER_CONTEXT"
+          echo "\$STRATEGY_CONTEXT" && echo "$STRATEGY_CONTEXT"
+          echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
+      - name: GitClone
+        run: |
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential vim wget curl git make gcc
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install procps inetutils-ping 
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install x11vnc xvfb x11-apps
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install imagemagick
+          echo "编译安装daemonize"
+          git clone --depth 1  https://salsa.debian.org/debian/daemonize.git daemonize
+          pushd daemonize
+          ./configure
+          make -j`nproc`
+          chmod +x ./daemonize
+          cp ./daemonize /usr/bin/daemonize
+          ldd /usr/bin/daemonize
+          popd
+          echo "启动图形化组件"
+          /usr/bin/daemonize /usr/bin/Xvfb :99 -screen 0 1280x1024x24
+          sleep 2
+          /usr/bin/daemonize /usr/bin/x11vnc -localhost -display :99
+          sleep 2
+          /usr/bin/daemonize daemonize -E DISPLAY=":99" /usr/bin/openbox
+          sleep 2
+          /usr/bin/daemonize daemonize -E DISPLAY=":99" /usr/bin/xclock
+          sleep 2
+          /usr/bin/xwd -display :99 -root -silent | convert xwd:- png:/tmp/screenshot.png
+          sleep 2
+          netstat -ntlp
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot
+          path: /tmp/screenshot.png
