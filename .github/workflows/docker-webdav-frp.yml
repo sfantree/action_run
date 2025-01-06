@@ -33,7 +33,8 @@ jobs:
       - name: GitClone
         run: |
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential vim wget curl git make gcc docker.io
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential vim wget curl git make gcc 
+          #docker.io
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install procps inetutils-ping 
           #sudo DEBIAN_FRONTEND=noninteractive apt-get -y install x11vnc xvfb x11-apps openbox
           #sudo DEBIAN_FRONTEND=noninteractive apt-get -y install imagemagick
