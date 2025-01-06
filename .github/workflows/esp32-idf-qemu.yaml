@@ -39,6 +39,7 @@ jobs:
           wget https://github.com/espressif/esp-idf/releases/download/v5.3.2/esp-idf-v5.3.2.zip
           unzip esp-idf-v5.3.2.zip
           pushd esp-idf-v5.3.2
+          sed -i '104d' tools/cmake/build.cmake
           export IDF_GITHUB_ASSETS="dl.espressif.cn/github_assets"
           ./install.sh esp32
           . ./export.sh
