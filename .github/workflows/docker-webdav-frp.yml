@@ -33,33 +33,33 @@ jobs:
       - name: GitClone
         run: |
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential vim wget curl git make gcc 
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential vim wget curl git make gcc
           #docker.io
           sudo DEBIAN_FRONTEND=noninteractive apt-get -y install procps inetutils-ping 
           #sudo DEBIAN_FRONTEND=noninteractive apt-get -y install x11vnc xvfb x11-apps openbox
           #sudo DEBIAN_FRONTEND=noninteractive apt-get -y install imagemagick
           echo "host启动docker容器"
           docker pull debian:12
-          docker run --name "debian12" -itd --init debian:12
-          docker exec "debian12" -it /bin/bash -c "apt-get update -y"
-          docker exec "debian12" -it /bin/bash -c "apt-get -y install build-essential sudo wget curl git make gcc"
+          docker run --name  "debian12" -itd --init debian:12
+          docker exec -it "debian12" /bin/bash -c "apt-get update -y"
+          docker exec -it "debian12" /bin/bash -c "apt-get -y install build-essential sudo wget curl git make gcc"
           echo "docker容器编译安装daemonize"
-          docker exec "debian12" -it /bin/bash -c "git clone --depth 1  https://salsa.debian.org/debian/daemonize.git daemonize && pushd daemonize && ./configure && make -j && chmod +x ./daemonize && cp ./daemonize /usr/bin/daemonize"
+          docker exec -it "debian12" /bin/bash -c "git clone --depth 1  https://salsa.debian.org/debian/daemonize.git daemonize && pushd daemonize && ./configure && make -j && chmod +x ./daemonize && cp ./daemonize /usr/bin/daemonize"
           echo "docker容器安装frpc"
-          docker exec "debian12" -it /bin/bash -c "wget https://github.com/fatedier/frp/releases/download/v0.49.0/frp_0.49.0_linux_amd64.tar.gz"
-          docker exec "debian12" -it /bin/bash -c "tar zxf frp_0.49.0_linux_amd64.tar.gz"
-          docker exec "debian12" -it /bin/bash -c "cp frp_0.49.0_linux_amd64/frpc /usr/local/bin/frpc"
-          docker exec "debian12" -it /bin/bash -c "cp frp_0.49.0_linux_amd64/frpc.ini /etc/frpc.ini"
-          docker exec "debian12" -it /bin/bash -c "export FRPSERVER=$(ip route | grep default | awk '{print $3}')"
-          docker exec "debian12" -it /bin/bash -c 'sed "2s/127.0.0.1/$FRPSERVER/" /etc/frpc.ini'
-          docker exec "debian12" -it /bin/bash -c 'sed "8s/22/6065/" /etc/frpc.ini'
-          docker exec "debian12" -it /bin/bash -c 'cat /etc/frpc.ini'
-          docker exec "debian12" -it /bin/bash -c "/usr/bin/daemonize /usr/local/bin/frpc --config /etc/frpc.ini"
+          docker exec -it "debian12" /bin/bash -c "wget https://github.com/fatedier/frp/releases/download/v0.49.0/frp_0.49.0_linux_amd64.tar.gz"
+          docker exec -it "debian12" /bin/bash -c "tar zxf frp_0.49.0_linux_amd64.tar.gz"
+          docker exec -it "debian12" /bin/bash -c "cp frp_0.49.0_linux_amd64/frpc /usr/local/bin/frpc"
+          docker exec -it "debian12" /bin/bash -c "cp frp_0.49.0_linux_amd64/frpc.ini /etc/frpc.ini"
+          docker exec -it "debian12" /bin/bash -c "export FRPSERVER=$(ip route | grep default | awk '{print $3}')"
+          docker exec -it "debian12" /bin/bash -c 'sed "2s/127.0.0.1/$FRPSERVER/" /etc/frpc.ini'
+          docker exec -it "debian12" /bin/bash -c 'sed "8s/22/6065/" /etc/frpc.ini'
+          docker exec -it "debian12" /bin/bash -c 'cat /etc/frpc.ini'
+          docker exec -it "debian12" /bin/bash -c "/usr/bin/daemonize /usr/local/bin/frpc --config /etc/frpc.ini"
           echo "docker容器安装webdav"
-          docker exec "debian12" -it /bin/bash -c "wget https://github.com/hacdias/webdav/releases/download/v5.7.1/linux-amd64-webdav.tar.gz"
-          docker exec "debian12" -it /bin/bash -c "tar zxvf linux-amd64-webdav.tar.gz"
-          docker exec "debian12" -it /bin/bash -c "cp webdav /usr/local/bin/webdav"
-          docker exec "debian12" -it /bin/bash -c "/usr/bin/daemonize /usr/local/bin/webdav"
+          docker exec -it "debian12" /bin/bash -c "wget https://github.com/hacdias/webdav/releases/download/v5.7.1/linux-amd64-webdav.tar.gz"
+          docker exec -it "debian12" /bin/bash -c "tar zxvf linux-amd64-webdav.tar.gz"
+          docker exec -it "debian12" /bin/bash -c "cp webdav /usr/local/bin/webdav"
+          docker exec -it "debian12" /bin/bash -c "/usr/bin/daemonize /usr/local/bin/webdav"
           echo "host编译安装daemonize"
           git clone --depth 1  https://salsa.debian.org/debian/daemonize.git daemonize
           pushd daemonize
