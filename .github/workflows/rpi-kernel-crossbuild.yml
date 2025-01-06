@@ -1,4 +1,4 @@
-name: lx_action_run
+name: rpi-kernel-crossbuild
 on: workflow_dispatch
 jobs:
   ubuntu:
