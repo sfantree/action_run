@@ -1,0 +1,68 @@
+name: rpi-qt5
+on: workflow_dispatch
+jobs:
+  ubuntu:
+    name: Ubuntu Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: DumpInfo
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          JOB_CONTEXT: ${{ toJson(job) }}
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: |
+          echo "curl cip.cc" && curl cip.cc
+          echo "env" && env
+          echo "pwd" && pwd
+          echo "cat /proc/cpuinfo" && cat /proc/cpuinfo
+          echo "df -h" && df -h
+          echo "fdisk -l" && fdisk -l
+          echo "\$GITHUB_PATH" && echo $GITHUB_PATH
+          echo "\$GITHUB_ENV" && echo $GITHUB_ENV
+          echo "\$GITHUB_SHA" && echo $GITHUB_SHA 
+          echo "\$GITHUB_REPOSITORY" && echo $GITHUB_REPOSITORY
+          echo "\$GITHUB_WORKSPACE" && echo $GITHUB_WORKSPACE
+          echo "\$GITHUB_CONTEXT" && echo "$GITHUB_CONTEXT"
+          echo "\$JOB_CONTEXT" && echo "$JOB_CONTEXT"
+          echo "\$STEPS_CONTEXT" && echo "$STEPS_CONTEXT"
+          echo "\$RUNNER_CONTEXT" && echo "$RUNNER_CONTEXT"
+          echo "\$STRATEGY_CONTEXT" && echo "$STRATEGY_CONTEXT"
+          echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
+      - name: GitClone
+        run: |
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install wget unzip xz-utils git bc bison flex libssl-dev make libc6-dev libncurses5-dev python3
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential bc kmod cpio flex libncurses5-dev libelf-dev libssl-dev dwarves bison
+          #sudo DEBIAN_FRONTEND=noninteractive apt-get -y install crossbuild-essential-armhf
+          wget https://download.qt.io/archive/qt/5.12/5.12.9/single/qt-everywhere-src-5.12.9.tar.xz
+          xz -d qt-everywhere-src-5.12.9.tar.xz
+          tar xf qt-everywhere-src-5.12.9.tar
+          export QT512SOURCE="$(pwd)/qt-everywhere-src-5.12.9"
+          wget "https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar.xz"
+          xz -d gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar.xz
+          tar xvf gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar
+          #export CROSSPATH="$(pwd)/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-"
+          export PATH=$PATH:$(pwd)/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf/bin
+          pushd $QT512SOURCE
+          # python for build Qtxml
+          sudo cp /usr/bin/python3 /usr/bin/python
+          # patch for gcc10
+          sed -i "45i \#include <limits>" qtbase/src/corelib/global/qglobal.h
+          # patch for crossbuild
+          sed -i "8i QMAKE_CFLAGS += -O0 -mfpu=vfp -march=armv6zk -mtune=arm1176jzf-s" qtbase/mkspecs/linux-arm-gnueabi-g++/qmake.conf
+          sed -i "8i QMAKE_CXXFLAGS += -O0 -mfpu=vfp -march=armv6zk -mtune=arm1176jzf-s" qtbase/mkspecs/linux-arm-gnueabi-g++/qmake.conf
+          sed -i 's/arm-linux-gnueabi-/arm-none-linux-gnueabihf-/g' qtbase/mkspecs/linux-arm-gnueabi-g++/qmake.conf
+          # configure
+          ./configure -top-level -prefix /tmp/rpi-qt5 -opensource -confirm-license -release -strip -shared -xplatform linux-arm-gnueabi-g++ -optimized-qmake -c++std c++11 --rpath=no -pch -skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcanvas3d -skip qtconnectivity -skip qtdatavis3d -skip qtdoc -skip qtgamepad -skip qtlocation -skip qtmacextras -skip qtnetworkauth -skip qtpurchasing -skip qtremoteobjects -skip qtscript -skip qtscxml -skip qtsensors -skip qtspeech -skip qtsvg -skip qttools -skip qttranslations -skip qtwayland -skip qtwebengine -skip qtwebview -skip qtwinextras -skip qtx11extras -skip qtxmlpatterns -make libs -make examples -nomake tools -nomake tests -gui -widgets -dbus-runtime --glib=no --iconv=no --pcre=qt --zlib=qt -no-openssl --freetype=qt --harfbuzz=qt -no-opengl -linuxfb --xcb=no --libpng=qt --libjpeg=qt --sqlite=qt -plugin-sql-sqlite -recheck-all
+          make -j`nproc`
+          make install
+          ls -lh /tmp/rpi-qt5
+          du -sh /tmp/rpi-qt5
+          popd
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpi-qt5
+          path: /tmp/rpi-qt5
