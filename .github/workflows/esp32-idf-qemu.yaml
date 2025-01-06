@@ -50,5 +50,6 @@ jobs:
           git clone --depth 1 https://gitee.com/sfantree/esp-idf-qemu-helloworld.git esp-idf-qemu-helloworld
           pushd esp-idf-qemu-helloworld
           idf.py build
+          sudo -E find $HOME/.espressif -name qemu-system-xtensa -exec ln -s {} /usr/bin/qemu-system-xtensa \;
           timeout 30 idf.py qemu
           popd
