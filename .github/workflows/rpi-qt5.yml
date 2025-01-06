@@ -47,7 +47,7 @@ jobs:
           export PATH=$PATH:$(pwd)/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf/bin
           pushd $QT512SOURCE
           # python for build Qtxml
-          sudo cp /usr/bin/python3 /usr/bin/python
+          # sudo cp /usr/bin/python3 /usr/bin/python
           # patch for gcc10
           sed -i "45i \#include <limits>" qtbase/src/corelib/global/qglobal.h
           # patch for crossbuild
