@@ -2,15 +2,13 @@ set -ex
 
 pushd $HOME
 # 换源
-#rm -rf /etc/yum.repos.d/*.repo
+rm -rf /etc/yum.repos.d/*.repo
 #https://mirrors.tencent.com/repo/centos6_base.repo
 #curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.tencent.com/repo/centos6_base.repo
 #curl -o /etc/yum.repos.d/epel.repo http://mirrors.tencent.com/repo/epel-6.repo
 
-mv /etc/yum.repos.d /etc/yum.repos.d-old
-pushd /etc
-git clone https://github.com/serverok/centos6-repo.git yum.repos.d
-popd
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/serverok/centos6-repo/refs/heads/main/CentOS-Base.repo
+curl -o /etc/yum.repos.d/epel.repo https://raw.githubusercontent.com/serverok/centos6-repo/refs/heads/main/epel.repo
 
 yum update -y
 yum groupinstall -y "Development Tools"
