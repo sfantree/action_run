@@ -43,7 +43,7 @@ jobs:
           docker pull centos:6.10
           docker run --name  "centos6" -itd --init centos:6.10
           git clone --depth 1 https://github.com/sfantree/action_run.git
-          docker cp action_run/scriptcentos6-arm920t-crosstool.sh centos6:/root/
+          docker cp action_run/script/centos6-arm920t-crosstool.sh centos6:/root/
           docker exec  "centos6" /bin/bash -c "chmod +x /root/run.sh"
           docker exec  "centos6" /bin/bash -c "bash /root/run.sh"
           docker cp centos6:/tmp/arm920t.zip /tmp/arm920t.zip
