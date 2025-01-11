@@ -1,0 +1,55 @@
+name: docker-debian8-rpi-qt4
+on: workflow_dispatch
+jobs:
+  ubuntu:
+    name: Ubuntu Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: DumpInfo
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          JOB_CONTEXT: ${{ toJson(job) }}
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: |
+          echo "curl cip.cc" && curl cip.cc
+          echo "env" && env
+          echo "pwd" && pwd
+          echo "cat /proc/cpuinfo" && cat /proc/cpuinfo
+          echo "cat /proc/cmdline" && cat /proc/cmdline
+          echo "df -h" && df -h
+          echo "fdisk -l" && fdisk -l
+          echo "\$GITHUB_PATH" && echo $GITHUB_PATH
+          echo "\$GITHUB_ENV" && echo $GITHUB_ENV
+          echo "\$GITHUB_SHA" && echo $GITHUB_SHA 
+          echo "\$GITHUB_REPOSITORY" && echo $GITHUB_REPOSITORY
+          echo "\$GITHUB_WORKSPACE" && echo $GITHUB_WORKSPACE
+          echo "\$GITHUB_CONTEXT" && echo "$GITHUB_CONTEXT"
+          echo "\$JOB_CONTEXT" && echo "$JOB_CONTEXT"
+          echo "\$STEPS_CONTEXT" && echo "$STEPS_CONTEXT"
+          echo "\$RUNNER_CONTEXT" && echo "$RUNNER_CONTEXT"
+          echo "\$STRATEGY_CONTEXT" && echo "$STRATEGY_CONTEXT"
+          echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
+      - name: GitClone
+        run: |
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential vim wget curl git make gcc unzip
+          #docker.io
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -y install procps inetutils-ping 
+          #sudo DEBIAN_FRONTEND=noninteractive apt-get -y install x11vnc xvfb x11-apps openbox
+          #sudo DEBIAN_FRONTEND=noninteractive apt-get -y install imagemagick
+          echo "host启动docker容器"
+          docker pull debian:8
+          docker run --name  "debian8" -itd --init debian:8
+          git clone --depth 1 https://github.com/sfantree/action_run.git
+          docker cp action_run/script/debian8-rpi-qt4.sh debian8:/root/
+          docker exec "debian8" /bin/bash -c "mv /root/debian8-rpi-qt4.sh /root/run.sh"
+          docker exec "debian8" /bin/bash -c "chmod +x /root/run.sh"
+          docker exec "debian8" /bin/bash -c "bash /root/run.sh"
+          docker cp debian8:/tmp/arm-qt4.zip /tmp/arm-qt4.zip
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: arm-qt4.zip
+          path: /tmp/arm-qt4.zip
