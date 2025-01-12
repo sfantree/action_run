@@ -2,7 +2,6 @@ set -ex
 pushd $HOME
 echo 'deb [check-valid-until=no] http://archive.debian.org/debian jessie main' > /etc/apt/sources.list
 echo 'deb [check-valid-until=no] http://archive.debian.org/debian-security/ jessie/updates main' >> /etc/apt/sources.list
-echo 'deb [check-valid-until=no] http://archive.debian.org/debian jessie-updates main' >> /etc/apt/sources.list
 echo "Acquire::Check-Valid-Until false;" > /etc/apt/apt.conf
 echo "APT::Get::AllowUnauthenticated true;" >> /etc/apt/apt.conf
 apt-get update -y
