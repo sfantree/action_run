@@ -5,7 +5,7 @@ echo 'deb [check-valid-until=no] http://archive.debian.org/debian-security/ jess
 echo "Acquire::Check-Valid-Until false;" > /etc/apt/apt.conf
 echo "APT::Get::AllowUnauthenticated true;" >> /etc/apt/apt.conf
 apt-get update -y
-apt-get install vim cmake make gcc g++ automake openssl git unzip zip build-essential libssl-dev zlib1g-dev autoconf flex bison gperf libsqlite3-dev libicu-dev -y
+apt-get install wget curl vim cmake make gcc g++ automake openssl git unzip zip build-essential libssl-dev zlib1g-dev autoconf flex bison gperf libsqlite3-dev libicu-dev -y
 wget http://download.qt.io/archive/qt/4.8/4.8.4/qt-everywhere-opensource-src-4.8.4.tar.gz
 tar zxf qt-everywhere-opensource-src-4.8.4.tar.gz
 git clone --depth 1 https://github.com/raspberrypi/tools.git
