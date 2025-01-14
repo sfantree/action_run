@@ -1,7 +1,7 @@
 set -ex
 pushd $HOME
 apt-get update -qy
-apt-get install vim cmake make gcc g++ automake openssl git unzip zip build-essential libssl-dev zlib1g-dev autoconf flex bison gperf libsqlite3-dev libicu-dev -qy
+apt-get install wget curl vim cmake make gcc g++ automake openssl git unzip zip build-essential libssl-dev zlib1g-dev autoconf flex bison gperf libsqlite3-dev libicu-dev -qy
 git clone --depth 1 https://github.com/rvagg/rpi-newer-crosstools.git
 export PATH=$PATH:$(pwd)/rpi-newer-crosstools/x64-gcc-10.3.0-glibc-2.28/arm-rpi-linux-gnueabihf/bin
 wget https://github.com/opencv/opencv/archive/refs/tags/3.4.16.zip
