@@ -12,7 +12,8 @@ sed -i 's/arm-linux-gnueabi/arm-rpi-linux-gnueabihf/g' arm-gnueabi.toolchain.cma
 popd
 mkdir -p platforms/linux/build
 pushd platforms/linux/build
-cmake -DCMAKE_TOOLCHAIN_FILE=../arm-gnueabi.toolchain.cmake -DCMAKE_C_COMPILER=arm-rpi-linux-gnueabihf-gcc -DCMAKE_CXX_COMPILER=arm-rpi-linux-gnueabihf-g++  ../../..
+cmake -DCMAKE_TOOLCHAIN_FILE=../arm-gnueabi.toolchain.cmake -DCMAKE_C_COMPILER=arm-rpi-linux-gnueabihf-gcc -DCMAKE_CXX_COMPILER=arm-rpi-linux-gnueabihf-g++  ../../..  || true
+cmake -DCMAKE_TOOLCHAIN_FILE=../arm-gnueabi.toolchain.cmake -DCMAKE_C_COMPILER=arm-rpi-linux-gnueabihf-gcc -DCMAKE_CXX_COMPILER=arm-rpi-linux-gnueabihf-g++  ../../..  || true
 make -j
 DESTDIR=`pwd`/_install make install
 zip -q -r /tmp/rpi-opencv3.zip _install
