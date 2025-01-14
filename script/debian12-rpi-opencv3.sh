@@ -14,7 +14,7 @@ mkdir -p platforms/linux/build
 pushd platforms/linux/build
 cmake -DCMAKE_TOOLCHAIN_FILE=../arm-gnueabi.toolchain.cmake -DCMAKE_C_COMPILER=arm-rpi-linux-gnueabihf-gcc -DCMAKE_CXX_COMPILER=arm-rpi-linux-gnueabihf-g++  ../../..  || true
 cmake -DCMAKE_TOOLCHAIN_FILE=../arm-gnueabi.toolchain.cmake -DCMAKE_C_COMPILER=arm-rpi-linux-gnueabihf-gcc -DCMAKE_CXX_COMPILER=arm-rpi-linux-gnueabihf-g++  ../../..  || true
-make -j
+make -j`nproc`
 DESTDIR=`pwd`/_install make install
 zip -q -r /tmp/rpi-opencv3.zip _install
 popd
