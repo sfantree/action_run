@@ -33,13 +33,13 @@ jobs:
           echo "\$MATRIX_CONTEXT" && echo "$MATRIX_CONTEXT"
       - name: GitClone
         run: |
-          sudo DEBIAN_FRONTEND=noninteractive apt-get -yq update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install build-essential vim wget curl git make gcc unzip
-          sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install wget curl vim cmake make gcc g++ automake openssl git unzip zip build-essential libssl-dev zlib1g-dev autoconf flex bison gperf libsqlite3-dev libicu-dev -y
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -yqq update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -yqq install build-essential vim wget curl git make gcc unzip
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -yqq install wget curl vim cmake make gcc g++ automake openssl git unzip zip build-essential libssl-dev zlib1g-dev autoconf flex bison gperf libsqlite3-dev libicu-dev -y
           #docker.io
-          sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install procps inetutils-ping 
-          #sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install x11vnc xvfb x11-apps openbox
-          #sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install imagemagick
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -yqq install procps inetutils-ping 
+          #sudo DEBIAN_FRONTEND=noninteractive apt-get -yqq install x11vnc xvfb x11-apps openbox
+          #sudo DEBIAN_FRONTEND=noninteractive apt-get -yqq install imagemagick
           echo "host启动docker容器"
           docker pull debian:8
           docker run --name  "debian8" -itd --init debian:8
@@ -52,5 +52,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: arm-qt4.zip
-          path: /tmp/arm-qt4.zip
+          name: elm.zip
+          path: /tmp/elm.zip
