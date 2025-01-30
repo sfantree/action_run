@@ -1,4 +1,4 @@
-name: docker-debian8-rpi-qt4
+name: docker-debian8-vue2-elem
 on: workflow_dispatch
 jobs:
   ubuntu:
