@@ -61,7 +61,7 @@ android update project -p . -n $(basename $(pwd)) -s -t android-18
 ant clean debug
 cp bin/NotePad-debug.apk /tmp
 
-popd NotePad
+popd #NotePad
 popd #samples
 popd #android-sdk-linux
 popd #$home
